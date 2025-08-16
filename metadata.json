@@ -1,0 +1,5 @@
+{
+  "name": "AI Story Writer",
+  "description": "An interactive chatbot where you guide a story by making choices. Each step of the narrative is accompanied by an AI-generated image, bringing your adventure to life.",
+  "requestFramePermissions": []
+}
