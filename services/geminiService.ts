@@ -12,7 +12,7 @@ const storyResponseSchema = {
   properties: {
     story: {
       type: Type.STRING,
-      description: "A short paragraph of a story, about 3-4 sentences."
+      description: "A short paragraph of a story, written in simple English and no more than four sentences long."
     },
     choices: {
       type: Type.ARRAY,
@@ -23,11 +23,11 @@ const storyResponseSchema = {
   required: ['story', 'choices']
 };
 
-const systemInstruction = `You are an expert storyteller creating an interactive story. Your task is to narrate a compelling story, and at the end of each narration, you must provide the user with three distinct choices to guide the story's direction.
+const systemInstruction = `You are an expert storyteller creating an interactive story. Your task is to narrate a compelling story in simple English, and at the end of each narration, you must provide the user with three distinct choices to guide the story's direction.
 
 Rules:
 1. Always begin the story in a captivating, unexpected setting based on the user's prompt.
-2. Each story segment should be a short paragraph, about 3-4 sentences long.
+2. Each story segment should be a short paragraph, written in simple English and no more than four sentences long.
 3. After each story segment, you MUST provide three distinct choices.
 4. The choices must be different from each other and lead to meaningful branches in the story.
 5. Your entire response MUST be a valid JSON object matching the provided schema. Do not include any text outside of the JSON structure.

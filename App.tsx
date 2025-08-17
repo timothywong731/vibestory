@@ -6,6 +6,12 @@ import ChatMessage from './components/ChatMessage';
 import ChoiceButton from './components/ChoiceButton';
 import LoadingSpinner from './components/LoadingSpinner';
 
+const promptSuggestions = [
+  "A lone lighthouse keeper on a stormy, alien planet.",
+  "A detective discovers a magical secret in 1920s New Orleans.",
+  "Two rival starship captains are stranded on a lush, unexplored world.",
+];
+
 const App: React.FC = () => {
   const [chat, setChat] = useState<Chat | null>(null);
   const [storyHistory, setStoryHistory] = useState<StorySegment[]>([]);
@@ -37,10 +43,9 @@ const App: React.FC = () => {
     setStoryStarted(false);
     setInitialPrompt('');
   };
-
-  const handleStartStory = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!initialPrompt.trim()) {
+  
+  const startStory = async (prompt: string) => {
+    if (!prompt.trim()) {
       setError("Please describe an opening scene to begin your story.");
       return;
     }
@@ -51,7 +56,7 @@ const App: React.FC = () => {
     try {
       const newChat = createChatSession();
       setChat(newChat);
-      const { story, imageUrl } = await generateStoryAndImage(newChat, `Start the story with this scene: ${initialPrompt}`);
+      const { story, imageUrl } = await generateStoryAndImage(newChat, `Start the story with this scene: ${prompt}`);
       setStoryHistory([{ id: 1, text: story.story, imageUrl }]);
       setChoices(story.choices);
       setStoryStarted(true);
@@ -63,6 +68,11 @@ const App: React.FC = () => {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleStartStory = (e: React.FormEvent) => {
+    e.preventDefault();
+    startStory(initialPrompt);
   };
 
   const handleChoiceClick = async (choice: string) => {
@@ -117,7 +127,7 @@ const App: React.FC = () => {
                 <>
                   <h2 className="text-3xl font-serif text-rose-700 mb-4">Describe Your Opening Scene</h2>
                   <p className="text-stone-600 mb-8 max-w-lg mx-auto">What setting should your story begin in? Be as descriptive as you like!</p>
-                  <form onSubmit={handleStartStory} className="space-y-4">
+                  <form onSubmit={handleStartStory}>
                     <textarea
                       value={initialPrompt}
                       onChange={(e) => {
@@ -129,10 +139,28 @@ const App: React.FC = () => {
                       aria-label="Initial story prompt"
                       disabled={isLoading}
                     />
+                    
+                    <div className="my-6">
+                      <p className="text-stone-500 mb-3">Or try one of these ideas:</p>
+                      <div className="flex flex-col sm:flex-row flex-wrap justify-center gap-3">
+                        {promptSuggestions.map((prompt, index) => (
+                          <button
+                            key={index}
+                            type="button"
+                            onClick={() => startStory(prompt)}
+                            disabled={isLoading}
+                            className="bg-white/80 border border-rose-300 text-rose-700 font-semibold py-2 px-4 rounded-lg hover:bg-rose-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                          >
+                            {prompt}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                    
                     <button
                       type="submit"
                       className="bg-rose-500 text-white font-bold py-3 px-8 rounded-lg hover:bg-rose-600 transition-colors text-lg shadow-md disabled:bg-rose-300"
-                      disabled={isLoading}
+                      disabled={isLoading || !initialPrompt.trim()}
                     >
                       Weave My Story
                     </button>
