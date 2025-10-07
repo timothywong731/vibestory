@@ -48,7 +48,8 @@ async function generateImage(prompt: string): Promise<string> {
     const imagePrompt = `Cinematic, digital painting, detailed illustration, atmospheric. ${prompt}`;
     
     const response = await ai.models.generateImages({
-        model: 'imagen-3.0-generate-002',
+        // FIX: Updated model to 'imagen-4.0-generate-001' as per @google/genai guidelines.
+        model: 'imagen-4.0-generate-001',
         prompt: imagePrompt,
         config: {
             numberOfImages: 1,

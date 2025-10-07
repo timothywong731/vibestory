@@ -5,6 +5,13 @@ import type { StorySegment } from './types';
 import ChatMessage from './components/ChatMessage';
 import ChoiceButton from './components/ChoiceButton';
 import LoadingSpinner from './components/LoadingSpinner';
+import { 
+  initAudio,
+  playStartSound,
+  playEndSound,
+  playNewSegmentSound,
+  playErrorSound
+} from './services/audioService';
 
 const promptSuggestions = [
   "A lone lighthouse keeper on a stormy, alien planet.",
@@ -34,7 +41,15 @@ const App: React.FC = () => {
     }
   }, [storyHistory, isLoading, storyStarted]);
 
+  useEffect(() => {
+    // Play sound for new story segments, but not the very first one.
+    if (storyHistory.length > 1) {
+      playNewSegmentSound();
+    }
+  }, [storyHistory.length]);
+
   const resetStory = () => {
+    playEndSound();
     setIsLoading(false);
     setError(null);
     setStoryHistory([]);
@@ -50,6 +65,7 @@ const App: React.FC = () => {
       return;
     }
     
+    playStartSound();
     setIsLoading(true);
     setError(null);
     
@@ -61,6 +77,7 @@ const App: React.FC = () => {
       setChoices(story.choices);
       setStoryStarted(true);
     } catch (err) {
+      playErrorSound();
       console.error(err);
       const errorMessage = err instanceof Error ? err.message : "An unknown error occurred while starting your story.";
       setError(errorMessage);
@@ -72,6 +89,7 @@ const App: React.FC = () => {
 
   const handleStartStory = (e: React.FormEvent) => {
     e.preventDefault();
+    initAudio(); // Initialize audio on first user action
     startStory(initialPrompt);
   };
 
@@ -87,6 +105,7 @@ const App: React.FC = () => {
       setStoryHistory(prev => [...prev, { id: prev.length + 1, text: story.story, imageUrl }]);
       setChoices(story.choices);
     } catch (err) {
+      playErrorSound();
       console.error(err);
       setError(err instanceof Error ? err.message : "An unknown error occurred. Please try again.");
     } finally {
@@ -147,7 +166,10 @@ const App: React.FC = () => {
                           <button
                             key={index}
                             type="button"
-                            onClick={() => startStory(prompt)}
+                            onClick={() => {
+                              initAudio(); // Initialize audio on first user action
+                              startStory(prompt);
+                            }}
                             disabled={isLoading}
                             className="bg-white/80 border border-rose-300 text-rose-700 font-semibold py-2 px-4 rounded-lg hover:bg-rose-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                           >

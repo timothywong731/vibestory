@@ -8,6 +8,7 @@ AI Story Writer is a dynamic and interactive web application that allows you to 
 - **User-Defined Start**: Kick off the adventure with your own custom opening scene. Your imagination sets the stage!
 - **AI-Powered Creativity**: Leverages Google's Gemini API for dynamic story generation (`gemini-2.5-flash`) and rich, atmospheric imagery (`imagen-3.0-generate-002`).
 - **Visually Immersive**: Each part of the story is brought to life with a unique, AI-generated image that captures the mood of the scene.
+- **Immersive Sound**: Subtle, procedurally generated sound effects for key interactions enhance the storytelling experience. Sounds are created using the Web Audio API, so there are no extra files to download.
 - **Sleek & Responsive UI**: A clean, mobile-first design built with Tailwind CSS ensures a great experience on any device.
 - **Start Over Anytime**: Easily discard the current story and begin a new one with a different premise.
 
@@ -22,6 +23,7 @@ AI Story Writer is a dynamic and interactive web application that allows you to 
 
 - **Frontend**: React, TypeScript
 - **AI**: Google Gemini API (`@google/genai`)
+- **Audio**: Web Audio API
 - **Styling**: Tailwind CSS
 - **Fonts**: Google Fonts (Playfair Display & Roboto)
 - **Module Loading**: ES Modules via `importmap` for a buildless development environment.
@@ -37,6 +39,7 @@ The project is organized to separate concerns, making it easy to navigate and ma
 │   ├── ChatMessage.tsx      # Displays a story segment with its image
 │   └── LoadingSpinner.tsx   # Spinner shown during AI generation
 ├── services/
+│   ├── audioService.ts      # Generates sound effects using Web Audio API
 │   └── geminiService.ts     # Handles all communication with the Gemini API
 ├── App.tsx                  # Main application component, manages state and UI
 ├── index.html               # The main HTML file
